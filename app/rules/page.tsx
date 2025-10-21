@@ -1,9 +1,13 @@
+
 "use client";
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
 export default function RulesPage() {
+  const pathname = usePathname();
   const banners = [
     "/rules.png",
     "/rules2.png",
@@ -11,9 +15,15 @@ export default function RulesPage() {
     "/rules4.png",
   ];
 
+  const navItems = [
+    { href: "/", label: "Главная", external: false },
+    { href: "http://map.free-mind.fun:20424/", label: "Онлайн-карта", external: true },
+    { href: "/wiki", label: "Вики", external: false },
+    { href: "/rules", label: "Правила", external: false },
+  ];
+
   return (
     <div className="min-h-screen bg-[#0b0014] text-white">
-
       {/* 🔝 Верхняя панель */}
       <header className="fixed top-0 left-0 w-full z-50 bg-[#0b0014]/70 backdrop-blur-md border-b border-[#d946ef]/30 shadow-[0_0_20px_#d946ef20]">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
@@ -23,10 +33,34 @@ export default function RulesPage() {
           </Link>
 
           <nav className="flex gap-4">
-            <a href="http://map.free-mind.fun:20424/" className="px-4 py-2 bg-[#d946ef]/30 hover:bg-[#ff00ff]/40 rounded-full text-sm font-semibold transition-all duration-300">Онлайн-карта</a>
-            <a href="/" className="px-4 py-2 bg-[#d946ef]/30 hover:bg-[#ff00ff]/40 rounded-full text-sm font-semibold transition-all duration-300">Главная</a>
-            <Link href="/rules" className="px-4 py-2 bg-[#d946ef]/30 hover:bg-[#ff00ff]/40 rounded-full text-sm font-semibold transition-all duration-300">Правила</Link>
-            <a href="https://freemind.easydonate.ru/" className="px-4 py-2 bg-[#d946ef]/30 hover:bg-[#ff00ff]/40 rounded-full text-sm font-semibold transition-all duration-300">Донат</a>
+            {navItems.map((item) => {
+              const isActive = !item.external && (pathname === item.href || (item.href === "/" && pathname === "/"));
+              const className = clsx(
+                "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
+                isActive
+                  ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
+                  : "bg-[#d946ef]/30 hover:bg-[#ff00ff]/40"
+              );
+              return item.external ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={className}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       </header>
@@ -48,7 +82,6 @@ export default function RulesPage() {
           transition={{ duration: 1.5 }}
           className="max-w-4xl bg-[#0b0014]/70 border border-[#d946ef]/40 rounded-2xl shadow-[0_0_40px_#d946ef30] backdrop-blur-md p-8 leading-relaxed space-y-12"
         >
-
           {/* Общие правила */}
           <div className="space-y-4">
             <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">

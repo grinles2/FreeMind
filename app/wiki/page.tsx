@@ -1,9 +1,12 @@
+
 "use client";
 
 import { JSX } from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 import {
   Book,
   Mail,
@@ -47,6 +50,14 @@ interface ContentMap {
 
 export default function WikiPage() {
   const [selected, setSelected] = useState<ContentKey>("Как играть?");
+  const pathname = usePathname();
+
+  const navItems = [
+    { href: "/", label: "Главная", external: false },
+    { href: "http://map.free-mind.fun:20424/", label: "Онлайн-карта", external: true },
+    { href: "/wiki", label: "Вики", external: false },
+    { href: "/rules", label: "Правила", external: false },
+  ];
 
   const categories: Category[] = [
     {
@@ -420,7 +431,7 @@ export default function WikiPage() {
           <p>Идёт в комплекте с подпиской Фмбойчик</p>
         </div>
         <div>
-          <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Заражённый</h2>
+          <h2 className="text-lgCentre font-semibold text-[#d946ef] mb-2">Заражённый</h2>
           <p>Особенности:<br />Разлетающиеся споры</p>
           <p className="mt-2 font-semibold">Способы Получения:</p>
           <p>Набрав 15 голосов со своего ника на Хот-мс!</p>
@@ -500,30 +511,34 @@ export default function WikiPage() {
           </Link>
 
           <nav className="flex gap-4">
-            <a
-              href="http://map.free-mind.fun:20424/"
-              className="px-4 py-2 bg-[#d946ef]/30 hover:bg-[#ff00ff]/40 rounded-full text-sm font-semibold transition-all duration-300"
-            >
-              Онлайн-карта
-            </a>
-            <a
-              href="/wiki"
-              className="px-4 py-2 bg-[#d946ef]/30 hover:bg-[#ff00ff]/40 rounded-full text-sm font-semibold transition-all duration-300"
-            >
-              Вики
-            </a>
-            <Link
-              href="/rules"
-              className="px-4 py-2 bg-[#d946ef]/30 hover:bg-[#ff00ff]/40 rounded-full text-sm font-semibold transition-all duration-300"
-            >
-              Правила
-            </Link>
-            <a
-              href="https://freemind.easydonate.ru/"
-              className="px-4 py-2 bg-[#d946ef]/30 hover:bg-[#ff00ff]/40 rounded-full text-sm font-semibold transition-all duration-300"
-            >
-              Донат
-            </a>
+            {navItems.map((item) => {
+              const isActive = !item.external && (pathname === item.href || (item.href === "/" && pathname === "/"));
+              const className = clsx(
+                "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
+                isActive
+                  ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
+                  : "bg-[#d946ef]/30 hover:bg-[#ff00ff]/40"
+              );
+              return item.external ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={className}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       </header>
@@ -571,8 +586,6 @@ export default function WikiPage() {
               </div>
             ))}
           </div>
-
-          
         </aside>
 
         {/* 📜 Контентная область */}
