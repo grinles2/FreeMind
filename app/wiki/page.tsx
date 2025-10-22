@@ -55,7 +55,7 @@ export default function WikiPage() {
 
   const navItems = [
     { href: "/", label: "Главная", external: false },
-    { href: "http://map.free-mind.fun:20424/", label: "Онлайн-карта", external: true },
+    { href: "/map", label: "Онлайн-карта", external: false },
     { href: "/wiki", label: "Вики", external: false },
     { href: "/rules", label: "Правила", external: false },
   ];
