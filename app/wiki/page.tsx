@@ -327,7 +327,7 @@ export default function WikiPage() {
           Вы можете собрать сборку из модов, которые разрешены на форуме, но также можете скачать готовую сборку ниже 👇
         </p>
         <a
-          href="https://mega.nz/file/KdFUyLxQ#xT5WQqoAZwxnjfH4dWzwx3ZqMz7ytgeZKAD14zHfmG8"
+          href="https://drive.usercontent.google.com/download?id=1tK1Jlb3bY6Q6o7cjKAGCQaGUWp3OQuO4&export=download&authuser=0&confirm=t&uuid=72928829-7e7d-46f6-8548-dc94d3f69c6e&at=AKSUxGP0NJHhiodTiZJdywI4zIKn:1761131622464"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block mt-4 px-6 py-3 bg-[#d946ef] text-white font-semibold rounded-lg hover:bg-[#c026d3] transition-colors"
@@ -616,3 +616,4 @@ export default function WikiPage() {
     </div>
   );
 }
+
