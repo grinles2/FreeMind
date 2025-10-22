@@ -2,7 +2,7 @@
 "use client";
 
 import { JSX } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
@@ -51,6 +51,7 @@ interface ContentMap {
 export default function WikiPage() {
   const [selected, setSelected] = useState<ContentKey>("Как играть?");
   const pathname = usePathname();
+  const [isMobileWarning, setIsMobileWarning] = useState(false);
 
   const navItems = [
     { href: "/", label: "Главная", external: false },
@@ -496,8 +497,47 @@ export default function WikiPage() {
     ),
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const isPortrait = window.innerHeight > window.innerWidth;
+      setIsMobileWarning(width < 768 && isPortrait);
+    };
+
+    handleResize(); // Проверка при загрузке
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-[#0b0014] text-white">
+      {isMobileWarning && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-[#0b0014]/90 p-6 rounded-xl border border-[#d946ef]/40 shadow-[0_0_20px_#d946ef30] text-center max-w-md"
+          >
+            <h2 className="text-2xl font-bold text-[#d946ef] mb-4">Внимание!</h2>
+            <p className="text-gray-300 mb-4">
+              Для лучшего опыта использования Вики переверните телефон горизонтально.
+            </p>
+            <button
+              onClick={() => setIsMobileWarning(false)}
+              className="px-4 py-2 bg-[#d946ef] text-white rounded-lg hover:bg-[#c026d3] transition-colors"
+            >
+              Закрыть
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+
       {/* 🔝 Верхняя панель */}
       <header className="fixed top-0 left-0 w-full z-50 bg-[#0b0014]/70 backdrop-blur-md border-b border-[#d946ef]/30 shadow-[0_0_20px_#d946ef20]">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
@@ -616,4 +656,3 @@ export default function WikiPage() {
     </div>
   );
 }
-

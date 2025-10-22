@@ -5,6 +5,9 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
 export default function RulesPage() {
   const pathname = usePathname();
@@ -22,17 +25,36 @@ export default function RulesPage() {
     { href: "/rules", label: "Правила", external: false },
   ];
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#0b0014] text-white">
-      {/* 🔝 Верхняя панель */}
+      {/* 🔝 Верхняя панель / Боковая панель */}
       <header className="fixed top-0 left-0 w-full z-50 bg-[#0b0014]/70 backdrop-blur-md border-b border-[#d946ef]/30 shadow-[0_0_20px_#d946ef20]">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.gif" alt="Logo" className="w-10 h-10 object-cover" />
+            <Image
+              src="/logo.gif"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="w-10 h-10 object-cover"
+            />
             <span className="text-2xl font-bold text-[#d946ef]">FreeMind</span>
           </Link>
 
-          <nav className="flex gap-4">
+          {/* Мобильное меню (hamburger) */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-gray-300 hover:text-[#d946ef] focus:outline-none"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+          {/* Горизонтальное меню (на десктопе) */}
+          <nav className="hidden md:flex gap-4">
             {navItems.map((item) => {
               const isActive = !item.external && (pathname === item.href || (item.href === "/" && pathname === "/"));
               const className = clsx(
@@ -63,6 +85,53 @@ export default function RulesPage() {
             })}
           </nav>
         </div>
+
+        {/* Боковая панель (мобильная) */}
+        <motion.div
+          initial={{ x: "100%" }}
+          animate={{ x: isMenuOpen ? 0 : "100%" }}
+          transition={{ duration: 0.3 }}
+          className="fixed top-0 right-0 h-full w-64 bg-[#0b0014]/90 backdrop-blur-md border-l border-[#d946ef]/30 p-6 z-50 md:hidden"
+        >
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="text-gray-300 hover:text-[#d946ef] mb-6"
+          >
+            <X size={24} />
+          </button>
+          <nav className="flex flex-col gap-4">
+            {navItems.map((item) => {
+              const isActive = !item.external && (pathname === item.href || (item.href === "/" && pathname === "/"));
+              const className = clsx(
+                "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
+                isActive
+                  ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
+                  : "bg-[#d946ef]/30 hover:bg-[#ff00ff]/40"
+              );
+              return item.external ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={className}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </motion.div>
       </header>
 
       {/* Контент страницы */}
@@ -85,10 +154,12 @@ export default function RulesPage() {
           {/* Общие правила */}
           <div className="space-y-4">
             <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
-              <img
+              <Image
                 src={banners[0]}
                 alt="Общие правила"
-                className="w-full h-48 object-cover opacity-90 hover:opacity-100 transition-all duration-500"
+                width={768}
+                height={192}
+                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
               />
             </div>
             <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Общие правила</h2>
@@ -114,10 +185,12 @@ export default function RulesPage() {
           {/* Правила поведения в чате */}
           <div className="space-y-4">
             <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
-              <img
+              <Image
                 src={banners[1]}
                 alt="Правила поведения в чате"
-                className="w-full h-48 object-cover opacity-90 hover:opacity-100 transition-all duration-500"
+                width={768}
+                height={192}
+                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
               />
             </div>
             <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Правила поведения в чате</h2>
@@ -147,10 +220,12 @@ export default function RulesPage() {
           {/* Внутриигровые правила */}
           <div className="space-y-4">
             <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
-              <img
+              <Image
                 src={banners[2]}
                 alt="Внутриигровые правила"
-                className="w-full h-48 object-cover opacity-90 hover:opacity-100 transition-all duration-500"
+                width={768}
+                height={192}
+                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
               />
             </div>
             <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Внутриигровые правила</h2>
@@ -184,10 +259,12 @@ export default function RulesPage() {
           {/* Правила модерации */}
           <div className="space-y-4">
             <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
-              <img
+              <Image
                 src={banners[3]}
                 alt="Правила модерации"
-                className="w-full h-48 object-cover opacity-90 hover:opacity-100 transition-all duration-500"
+                width={768}
+                height={192}
+                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
               />
             </div>
             <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Правила модерации</h2>

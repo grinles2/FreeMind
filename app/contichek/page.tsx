@@ -25,7 +25,7 @@ export default function SimplePage() {
       {/* Контент - картинка по центру */}
       <main className="flex-1 flex items-center justify-center pt-20 pb-20">
         <motion.img
-          src="/konti.png"
+          src="/konti.jpg"
           alt="Главная картинка"
           className="max-w-full max-h-[80vh] border-4 border-[#d946ef] rounded-xl shadow-[0_0_30px_#d946ef50]"
           initial={{ opacity: 0, scale: 0.9 }}
