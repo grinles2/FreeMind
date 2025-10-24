@@ -398,68 +398,113 @@ export default function WikiPage() {
         </ul>
       </div>
     ),
+
+
+
     "Наборы Эффектов": (
-      <div className="space-y-6 text-gray-300">
-        <div>
-          <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Святая Поступь</h2>
-          <p>След ходьбы<br />Особый "афк" вид<br />След стрел, мечей, телепорта...</p>
-          <p className="mt-2 font-semibold">Способ Получения:</p>
-          <p>Купить на сайте</p>
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Варден</h2>
-          <p>Особенности:<br />След ходьбы<br />След стрел, мечей...</p>
-          <p className="mt-2 font-semibold">Способ Получения:</p>
-          <p>Идёт в комплекте с подпиской Фмбойчик</p>
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Коллапс</h2>
-          <p>Создан @Axoiot_6</p>
-          <p>Особенности:<br />След ходьбы<br />Особый "афк" вид<br />След стрел, мечей, телепорта...</p>
-          <p className="mt-2 font-semibold">Способ Получения:</p>
-          <p>Купить на сайте поддержав @Axoiot_6</p>
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Загадка</h2>
-          <p>Особенности:<br />Неизвестно...<br />Кто-то подчищает следы...<br />Котя, может ты знаешь?</p>
-          <p className="mt-2 font-semibold">Способ Получения:</p>
-          <p>Идёт в комплекте с подпиской Фмбойчик</p>
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Сакура</h2>
-          <p>Особенности:<br />Классический след ходьбы, ничего отвлекающего...</p>
-          <p className="mt-2 font-semibold">Способ Получения:</p>
-          <p>Идёт в комплекте с подпиской Фмбойчик</p>
-        </div>
-        <div>
-          <h2 className="text-lgCentre font-semibold text-[#d946ef] mb-2">Заражённый</h2>
-          <p>Особенности:<br />Разлетающиеся споры</p>
-          <p className="mt-2 font-semibold">Способы Получения:</p>
-          <p>Набрав 15 голосов со своего ника на Хот-мс!</p>
-          <a
-            href="https://hotmc.ru/minecraft-server-275654"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-2 px-4 py-2 bg-[#d946ef] text-white font-semibold rounded-lg hover:bg-[#c026d3] transition-colors"
-          >
-            Голосовать на HotMC
-          </a>
-          <p className="mt-2">Приобретя любой донат на сервере</p>
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Звездочёт</h2>
-          <p>Особенности:<br />След ходьбы<br />След мечей, урона...</p>
-          <p>Выдаётся за выдающиеся дела на сервере!</p>
-          <p>Примеры:<br />За впечатляющий проект или постройку<br />Проведение Ивентов<br />Контентмейкерам</p>
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Сонный</h2>
-          <p>Особенности:<br />След ходьбы</p>
-          <p className="mt-2 font-semibold">Способы Получения:</p>
-          <p>Побывать на первом сезоне FreeMind, скоро...</p>
-        </div>
-      </div>
-    ),
+  <div className="space-y-6 text-gray-300">
+    <div>
+      <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Святая Поступь</h2>
+      <img
+        src="/fly2.gif" // Замените на путь к вашей гифке (например, /holy-step.gif)
+        alt="Святая Поступь Эффект"
+        className="w-full h-auto max-h-48 rounded-lg mb-4 object-cover"
+      />
+      <p>След ходьбы<br />Особый "афк" вид<br />След стрел, мечей, телепорта...</p>
+      <p className="mt-2 font-semibold">Способ Получения:</p>
+      <p>Купить на сайте</p>
+    </div>
+    <div>
+      <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Варден</h2>
+      <img
+        src="/warden.gif" // Замените на путь к вашей гифке (например, /warden.gif)
+        alt="Варден Эффект"
+        className="w-full h-auto max-h-48 rounded-lg mb-4 object-cover"
+      />
+      <p>Особенности:<br />След ходьбы<br />След стрел, мечей...</p>
+      <p className="mt-2 font-semibold">Способ Получения:</p>
+      <p>Идёт в комплекте с подпиской Фмбойчик</p>
+    </div>
+    <div>
+      <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Коллапс</h2>
+      <img
+        src="/collaps4.gif" // Замените на путь к вашей гифке (например, /collapse.gif)
+        alt="Коллапс Эффект"
+        className="w-full h-auto max-h-48 rounded-lg mb-4 object-cover"
+      />
+      <p>Создан @Axoiot_6</p>
+      <p>Особенности:<br />След ходьбы<br />Особый "афк" вид<br />След стрел, мечей, телепорта...</p>
+      <p className="mt-2 font-semibold">Способ Получения:</p>
+      <p>Купить на сайте поддержав @Axoiot_6</p>
+    </div>
+    <div>
+      <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Загадка</h2>
+      <img
+        src="/zagadka.gif" // Замените на путь к вашей гифке (например, /mystery.gif)
+        alt="Загадка Эффект"
+        className="w-full h-auto max-h-48 rounded-lg mb-4 object-cover"
+      />
+      <p>Особенности:<br />Неизвестно...<br />Кто-то подчищает следы...<br />Котя, может ты знаешь?</p>
+      <p className="mt-2 font-semibold">Способ Получения:</p>
+      <p>Идёт в комплекте с подпиской Фмбойчик</p>
+    </div>
+    <div>
+      <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Сакура</h2>
+      <img
+        src="/sakura.gif" // Замените на путь к вашей гифке (например, /sakura.gif)
+        alt="Сакура Эффект"
+        className="w-full h-auto max-h-48 rounded-lg mb-4 object-cover"
+      />
+      <p>Особенности:<br />Классический след ходьбы, ничего отвлекающего...</p>
+      <p className="mt-2 font-semibold">Способ Получения:</p>
+      <p>Идёт в комплекте с подпиской Фмбойчик</p>
+    </div>
+    <div>
+      <h2 className="text-lgCentre font-semibold text-[#d946ef] mb-2">Заражённый</h2>
+      <img
+        src="/zaraza.gif" // Замените на путь к вашей гифке (например, /infected.gif)
+        alt="Заражённый Эффект"
+        className="w-full h-auto max-h-48 rounded-lg mb-4 object-cover"
+      />
+      <p>Особенности:<br />Разлетающиеся споры</p>
+      <p className="mt-2 font-semibold">Способы Получения:</p>
+      <p>Набрав 15 голосов со своего ника на Хот-мс!</p>
+      <a
+        href="https://hotmc.ru/minecraft-server-275654"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block mt-2 px-4 py-2 bg-[#d946ef] text-white font-semibold rounded-lg hover:bg-[#c026d3] transition-colors"
+      >
+        Голосовать на HotMC
+      </a>
+      <p className="mt-2">Приобретя любой донат на сервере</p>
+    </div>
+    <div>
+      <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Звездочёт</h2>
+      <img
+        src="/zvezdni.gif" // Замените на путь к вашей гифке (например, /stargazer.gif)
+        alt="Звездочёт Эффект"
+        className="w-full h-auto max-h-48 rounded-lg mb-4 object-cover"
+      />
+      <p>Особенности:<br />След ходьбы<br />След мечей, урона...</p>
+      <p>Выдаётся за выдающиеся дела на сервере!</p>
+      <p>Примеры:<br />За впечатляющий проект или постройку<br />Проведение Ивентов<br />Контентмейкерам</p>
+    </div>
+    <div>
+      <h2 className="text-lg font-semibold text-[#d946ef] mb-2">Сонный</h2>
+      <img
+        src="/sleep.gif" // Замените на путь к вашей гифке (например, /sleepy.gif)
+        alt="Сонный Эффект"
+        className="w-full h-auto max-h-48 rounded-lg mb-4 object-cover"
+      />
+      <p>Особенности:<br />След ходьбы</p>
+      <p className="mt-2 font-semibold">Способы Получения:</p>
+      <p>Побывать на первом сезоне FreeMind, скоро...</p>
+    </div>
+  </div>
+),
+
+    
     "Кланы": (
       <div className="space-y-6 text-gray-300">
         <div className="text-center">
