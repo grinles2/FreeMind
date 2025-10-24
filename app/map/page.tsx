@@ -5,19 +5,36 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
 export default function MapPage() {
   const pathname = usePathname();
   const navItems = [
     { href: "/", label: "Главная", external: false },
-    { href: "/map", label: "Онлайн-карта", external: false }, // Изменено href на /map для этой страницы
+    { href: "/map", label: "Онлайн-карта", external: false },
     { href: "/wiki", label: "Вики", external: false },
     { href: "/rules", label: "Правила", external: false },
   ];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mapHeight, setMapHeight] = useState("0px");
+
+  useEffect(() => {
+    const updateHeight = () => {
+      const headerHeight = document.querySelector("header")?.clientHeight || 80;
+      const footerHeight = document.querySelector("footer")?.clientHeight || 60;
+      const vh = window.innerHeight;
+      const topOffset = headerHeight; // Оставляем место под заголовок
+      const availableHeight = vh - topOffset - footerHeight - 20; // -20px для дополнительного отступа сверху
+      setMapHeight(`${availableHeight}px`);
+    };
+
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
+
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
 
   return (
     <div className="relative min-h-screen bg-[#0b0014] text-white">
@@ -125,12 +142,13 @@ export default function MapPage() {
       </header>
 
       {/* Центральная секция с iframe */}
-      <main className="flex flex-col items-center justify-center min-h-screen px-6 py-16 pt-28">
+      <main className="relative min-h-screen pt-[80px]">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1 }}
-          className="w-full max-w-6xl h-[80vh] border border-[#d946ef]/50 rounded-2xl overflow-hidden shadow-[0_0_30px_#d946ef30]"
+          className="absolute top-[80px] left-0 w-screen"
+          style={{ height: mapHeight }}
         >
           <iframe
             src="https://map.whiteshieldmc.com/"
@@ -143,7 +161,7 @@ export default function MapPage() {
       </main>
 
       {/* Футер */}
-      <footer className="relative z-10 py-6 text-center border-t border-[#d946ef]/30 bg-[#0b0014]/80 backdrop-blur-md">
+      <footer className="fixed bottom-0 left-0 w-full z-10 py-6 text-center border-t border-[#d946ef]/30 bg-[#0b0014]/80 backdrop-blur-md">
         <p className="text-gray-400 text-sm">
           FreeMind не связан, не одобрен и не принадлежит Mojang Studios или Microsoft.
         </p>
