@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "FreeMind",
-  description: "Добро пожаловать на сервер FreeMind! Напишите /contichek в адрес для проверки.",
+  description: "FreeMind — уютный vanilla+ сервер Minecraft с дружным сообществом и без лишних забот.",
 };
 
 export default function RootLayout({
