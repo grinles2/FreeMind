@@ -81,8 +81,26 @@ export default function AboutPage() {
             className="w-64 h-64 object-cover rounded-lg border border-[#d946ef]/50 shadow-[0_0_20px_#d946ef50] mb-6"
           />
           <p className="text-xl text-gray-300">
-            Сайт сделан <span className="text-[#d946ef] font-semibold">GrinLes1</span>, мур
+            Сайт сделан{" "}
+            <span className="text-[#d946ef] font-semibold">GrinLes1</span>, мур{" "}
+            <Link href="https://t.me/grinles" target="_blank" rel="noopener noreferrer">
+              <Image
+                src="/telegram.svg"
+                alt="Blog"
+                width={24}
+                height={24}
+                className="inline-block ml-2 align-middle"
+              />
+            </Link>
           </p>
+          <a
+            href="https://t.me/aksolotly_kirill"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-block px-6 py-3 bg-[#d946ef] text-white font-semibold rounded-lg hover:bg-[#c026d3] transition-colors"
+          >
+            Подарить Чулочки
+          </a>
         </motion.div>
       </main>
 
