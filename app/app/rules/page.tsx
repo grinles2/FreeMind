@@ -1,0 +1,283 @@
+
+"use client";
+
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+
+export default function RulesPage() {
+  const pathname = usePathname();
+  const banners = [
+    "/rules.png",
+    "/rules2.png",
+    "/rules3.png",
+    "/rules4.png",
+  ];
+
+  const navItems = [
+    { href: "/", label: "Главная", external: false },
+    { href: "/map", label: "Онлайн-карта", external: false },
+    { href: "/wiki", label: "Вики", external: false },
+    { href: "/rules", label: "Правила", external: false },
+  ];
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-[#0b0014] text-white">
+      {/* 🔝 Верхняя панель / Боковая панель */}
+      <header className="fixed top-0 left-0 w-full z-50 bg-[#0b0014]/70 backdrop-blur-md border-b border-[#d946ef]/30 shadow-[0_0_20px_#d946ef20]">
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/logo.gif"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="w-10 h-10 object-cover"
+            />
+            <span className="text-2xl font-bold text-[#d946ef]">FreeMind</span>
+          </Link>
+
+          {/* Мобильное меню (hamburger) */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-gray-300 hover:text-[#d946ef] focus:outline-none"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+          {/* Горизонтальное меню (на десктопе) */}
+          <nav className="hidden md:flex gap-4">
+            {navItems.map((item) => {
+              const isActive = !item.external && (pathname === item.href || (item.href === "/" && pathname === "/"));
+              const className = clsx(
+                "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
+                isActive
+                  ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
+                  : "bg-[#d946ef]/30 hover:bg-[#ff00ff]/40"
+              );
+              return item.external ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={className}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Боковая панель (мобильная) */}
+        <motion.div
+          initial={{ x: "100%" }}
+          animate={{ x: isMenuOpen ? 0 : "100%" }}
+          transition={{ duration: 0.3 }}
+          className="fixed top-0 right-0 h-full w-64 bg-[#0b0014]/90 backdrop-blur-md border-l border-[#d946ef]/30 p-6 z-50 md:hidden"
+        >
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="text-gray-300 hover:text-[#d946ef] mb-6"
+          >
+            <X size={24} />
+          </button>
+          <nav className="flex flex-col gap-4">
+            {navItems.map((item) => {
+              const isActive = !item.external && (pathname === item.href || (item.href === "/" && pathname === "/"));
+              const className = clsx(
+                "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
+                isActive
+                  ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
+                  : "bg-[#d946ef]/30 hover:bg-[#ff00ff]/40"
+              );
+              return item.external ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={className}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </motion.div>
+      </header>
+
+      {/* Контент страницы */}
+      <div className="px-6 py-16 flex flex-col items-center pt-28">
+        <motion.h1
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-5xl font-bold text-[#d946ef] mb-12 drop-shadow-[0_0_20px_#d946ef]"
+        >
+          Правила Сервера FreeMind
+        </motion.h1>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5 }}
+          className="max-w-4xl bg-[#0b0014]/70 border border-[#d946ef]/40 rounded-2xl shadow-[0_0_40px_#d946ef30] backdrop-blur-md p-8 leading-relaxed space-y-12"
+        >
+          {/* Общие правила */}
+          <div className="space-y-4">
+            <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
+              <Image
+                src={banners[0]}
+                alt="Общие правила"
+                width={768}
+                height={192}
+                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
+              />
+            </div>
+            <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Общие правила</h2>
+            <p className="text-gray-300 whitespace-pre-line">{`1.1 Регистрируясь на проекте FreeMind вы автоматически подтверждаете свою ознакомленность с правилами, соглашаетесь со всем сводом правил и обязуетесь соблюдать их
+
+1.2 Незнание правил не освобождает от ответственности
+
+1.3 Профиль и ник пользователя должен соответствовать всем правилам сервера, и правилам поведения в чате.
+
+1.4 Владелец аккаунта несёт за него полную ответственность
+
+1.5 Запрещена передача аккаунта другим пользователям без согласования с @Админ
+
+1.6 Разрешено создание одного твинк аккаунта с вашим ником и припиской Tvink или _Tvink (обход любого наказания с помощью твинка увеличивает срок наказания)
+
+1.7 Запрещены любые действия, которые негативно влияют на репутацию сервера, мешают комфортной игре на сервере, приносят негатив и раздражение другим игрокам.
+
+1.8 Средства потраченные на платные услуги являются добровольной поддержкой и не подлежат возврату.
+
+1.9 Присутствие на дискорд сервере обязательно, иначе вы не сможете зайти на сервер.`}</p>
+          </div>
+
+          {/* Правила поведения в чате */}
+          <div className="space-y-4">
+            <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
+              <Image
+                src={banners[1]}
+                alt="Правила поведения в чате"
+                width={768}
+                height={192}
+                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
+              />
+            </div>
+            <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Правила поведения в чате</h2>
+            <p className="text-gray-300 whitespace-pre-line">{`2.1 Запрещен буллинг игроков и проявление провокационной токсичности в любом виде
+
+2.2 Запрещено оскорбление религии, национальности, расы, пола и других индивидуальных отличий человека в любом виде.
+
+2.3 Запрещено разжигание и обсуждение конфликтов
+
+2.4 Запрещена публикация материалов грубого, насильственного характера, нацисткой символики, 18+ контента
+
+2.5 Запрещено использование выражений и действий, за которые банят на Twitch, особенно в присутствии стримера
+
+2.6 Запрещено разглашение чьей-либо личной информации без разрешения
+
+2.7 Запрещено пинговать игроков после просьбы о прекращении
+
+2.8 Запрещено упоминать любые чит-клиенты без повода
+
+2.9 Запрещён чрезмерный капс/флуд
+
+2.10 Запрещена реклама в любом виде
+
+2.11 Запрещено обсуждение политики.`}</p>
+          </div>
+
+          {/* Внутриигровые правила */}
+          <div className="space-y-4">
+            <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
+              <Image
+                src={banners[2]}
+                alt="Внутриигровые правила"
+                width={768}
+                height={192}
+                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
+              />
+            </div>
+            <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Внутриигровые правила</h2>
+            <p className="text-gray-300 whitespace-pre-line">{`3.1 Запрещено гриферство в любом виде
+
+3.2 Запрещено использование читов, скриптов, авто-кликеров, X-ray, baritone и подобных
+
+3.3 Приваты помечаются табличками с ником со всех 4 сторон (ломать чужие таблички запрещено)
+
+3.4 Территория 250x250 от нулевой точки принадлежит спавну
+
+3.5 Запрещено создавать помехи другим игрокам, находиться на территории после просьбы покинуть её
+
+3.6 PvP только по взаимному согласию
+
+3.7 Запрещены мультиаккаунты и обход бана
+
+3.8 Запрещено использовать баги или скрывать их
+
+3.9 Разрешён только дюп TNT и ковров
+
+3.10 Запрещено строить лаг-машины
+
+3.11 Запрещено убивать мобов в чужом привате
+
+3.12 18+ арты должны быть в закрытых комнатах
+
+3.13 При нарушении — обращаться в тикет или к хелперу.`}</p>
+          </div>
+
+          {/* Правила модерации */}
+          <div className="space-y-4">
+            <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
+              <Image
+                src={banners[3]}
+                alt="Правила модерации"
+                width={768}
+                height={192}
+                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
+              />
+            </div>
+            <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Правила модерации</h2>
+            <p className="text-gray-300 whitespace-pre-line">{`4.1 Проверка: игрок обязан пройти проверку при подозрении на нарушения. Отказ = нарушение.
+
+4.2 Модераторы могут удалять сущности, влияющие на TPS
+
+4.3 При постройках сохраняйте лайтматики
+
+4.4 Администрация имеет право в особых случаях выходить за рамки правил.`}</p>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
