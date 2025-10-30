@@ -58,6 +58,7 @@ export default function WikiPage() {
     { href: "/map", label: "Онлайн-карта", external: false },
     { href: "/wiki", label: "Вики", external: false },
     { href: "/rules", label: "Правила", external: false },
+    { href: "/shop", label: "Магазин", external: false }
   ];
 
   const categories: Category[] = [
