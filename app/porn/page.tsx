@@ -9,14 +9,14 @@ export default function PlayersPage() {
     { name: "Копатыч", image: "/forum/hevi.jpg" },
     { name: "Копатыч", image: "/forum/hevi1.jpg" },
     { name: "Копатыч", image: "/forum/hevi2.jpg" },
-    { name: "Фембойчик", image: "/forum/tostem1.jpg" },
-    { name: "Фембойчик", image: "/forum/tostem2.jpg" },
-    { name: "Фембойчик", image: "/forum/tostem3.jpg" },
-    { name: "Фембойчик", image: "/forum/tostem4.jpg" },
-    { name: "Фембойчик", image: "/forum/tostem5.jpg" },
-    { name: "Фембойчик", image: "/forum/tostem6.jpg" },
-    { name: "Фембойчик", image: "/forum/tostem7.jpg" },
-    { name: "Маслина", image: "/forum/her.jpg" },
+    { name: "Фембойчик", image: "/forum/tostem1.png" },
+    { name: "Фембойчик", image: "/forum/tostem2.png" },
+    { name: "Фембойчик", image: "/forum/tostem3.png" },
+    { name: "Фембойчик", image: "/forum/tostem4.png" },
+    { name: "Фембойчик", image: "/forum/tostem5.png" },
+    { name: "Фембойчик", image: "/forum/tostem6.png" },
+    { name: "Фембойчик", image: "/forum/tostem7.png" },
+    { name: "Маслина", image: "/forum/her.png" },
 
   ];
 
