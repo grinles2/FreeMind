@@ -23,8 +23,7 @@ export default function Home() {
     { href: "/map", label: "Онлайн-карта", external: false },
     { href: "/wiki", label: "Вики", external: false },
     { href: "/rules", label: "Правила", external: false },
-    { href: "/shop", label: "Магазин", external: false },
-    { href: "/elections", label: "Выборы", external: false }
+    { href: "/shop", label: "Магазин", external: false }
   ];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
