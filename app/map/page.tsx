@@ -152,7 +152,7 @@ export default function MapPage() {
           style={{ height: mapHeight }}
         >
           <iframe
-            src="https://map.whiteshieldmc.com/"
+            src="http://94.156.170.142:25570/"
             className="w-full h-full"
             title="Онлайн-карта"
             allowFullScreen
