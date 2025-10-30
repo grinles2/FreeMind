@@ -29,8 +29,9 @@ export default function ShopPage() {
     { href: "/map", label: "Онлайн-карта", external: false },
     { href: "/wiki", label: "Вики", external: false },
     { href: "/rules", label: "Правила", external: false },
-    { href: "/shop", label: "Магазин", external: false }
+    { href: "/shop", label: "Магазин", external: false },
   ];
+
   const products: Product[] = [
     {
       id: "fmboy",
@@ -197,18 +198,20 @@ export default function ShopPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999]"
+            onClick={() => setSelected(null)}
           >
             <motion.div
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
-              className="bg-[#10001f] border border-[#d946ef]/40 rounded-2xl shadow-[0_0_25px_#d946ef40] p-6 max-w-md w-full text-center relative"
+              className="relative bg-[#10001f] border border-[#d946ef]/40 rounded-2xl shadow-[0_0_25px_#d946ef40] p-6 max-w-md w-full text-center"
+              onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setSelected(null)}
-                className="absolute top-3 right-3 text-gray-400 hover:text-white"
+                className="absolute top-3 right-3 text-gray-400 hover:text-white transition-colors"
               >
-                <X size={20} />
+                <X size={28} />
               </button>
 
               <img
