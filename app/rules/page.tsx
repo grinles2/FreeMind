@@ -16,7 +16,7 @@ type RuleTab =
   | "Правила модерации";
 
 interface RuleContent {
-  [key: string]: JSX.Element;
+  [key: string]: React.ReactNode;
 }
 
 export default function RulesPage() {
