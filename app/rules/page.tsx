@@ -1,170 +1,65 @@
 
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { Menu, X } from "lucide-react";
+import { Menu, X, AlertTriangle, MessageSquare, Gamepad2, Shield } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
+type RuleTab =
+  | "Общие правила"
+  | "Правила поведения в чате"
+  | "Внутриигровые правила"
+  | "Правила модерации";
+
+interface RuleContent {
+  [key: string]: JSX.Element;
+}
+
 export default function RulesPage() {
   const pathname = usePathname();
-  const banners = [
-    "/rules.png",
-    "/rules2.png",
-    "/rules3.png",
-    "/rules4.png",
-  ];
+  const [selected, setSelected] = useState<RuleTab>("Общие правила");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [bottomMenuOpen, setBottomMenuOpen] = useState(false);
 
   const navItems = [
     { href: "/", label: "Главная", external: false },
     { href: "/map", label: "Онлайн-карта", external: false },
     { href: "/wiki", label: "Вики", external: false },
     { href: "/rules", label: "Правила", external: false },
-    { href: "/shop", label: "Магазин", external: false }
+    { href: "/shop", label: "Магазин", external: false },
   ];
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const banners = {
+    "Общие правила": "/rules.png",
+    "Правила поведения в чате": "/rules2.png",
+    "Внутриигровые правила": "/rules3.png",
+    "Правила модерации": "/rules4.png",
+  };
 
-  return (
-    <div className="min-h-screen bg-[#0b0014] text-white">
-      {/* 🔝 Верхняя панель / Боковая панель */}
-      <header className="fixed top-0 left-0 w-full z-50 bg-[#0b0014]/70 backdrop-blur-md border-b border-[#d946ef]/30 shadow-[0_0_20px_#d946ef20]">
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/logo.gif"
-              alt="Logo"
-              width={40}
-              height={40}
-              className="w-10 h-10 object-cover"
-            />
-            <span className="text-2xl font-bold text-[#d946ef]">FreeMind</span>
-          </Link>
+  const ruleSections: { name: RuleTab; icon: React.ComponentType<any> }[] = [
+    { name: "Общие правила", icon: AlertTriangle },
+    { name: "Правила поведения в чате", icon: MessageSquare },
+    { name: "Внутриигровые правила", icon: Gamepad2 },
+    { name: "Правила модерации", icon: Shield },
+  ];
 
-          {/* Мобильное меню (hamburger) */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-300 hover:text-[#d946ef] focus:outline-none"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-
-          {/* Горизонтальное меню (на десктопе) */}
-          <nav className="hidden md:flex gap-4">
-            {navItems.map((item) => {
-              const isActive = !item.external && (pathname === item.href || (item.href === "/" && pathname === "/"));
-              const className = clsx(
-                "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
-                isActive
-                  ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
-                  : "bg-[#d946ef]/30 hover:bg-[#ff00ff]/40"
-              );
-              return item.external ? (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={className}
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={className}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
+  const content: RuleContent = {
+    "Общие правила": (
+      <div className="space-y-6 text-gray-300">
+        <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50]">
+          <Image
+            src={banners["Общие правила"]}
+            alt="Общие правила"
+            width={768}
+            height={192}
+            className="w-full h-auto object-cover opacity-90"
+          />
         </div>
-
-        {/* Боковая панель (мобильная) */}
-        <motion.div
-          initial={{ x: "100%" }}
-          animate={{ x: isMenuOpen ? 0 : "100%" }}
-          transition={{ duration: 0.3 }}
-          className="fixed top-0 right-0 h-full w-64 bg-[#0b0014]/90 backdrop-blur-md border-l border-[#d946ef]/30 p-6 z-50 md:hidden"
-        >
-          <button
-            onClick={() => setIsMenuOpen(false)}
-            className="text-gray-300 hover:text-[#d946ef] mb-6"
-          >
-            <X size={24} />
-          </button>
-          <nav className="flex flex-col gap-4">
-            {navItems.map((item) => {
-              const isActive = !item.external && (pathname === item.href || (item.href === "/" && pathname === "/"));
-              const className = clsx(
-                "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
-                isActive
-                  ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
-                  : "bg-[#d946ef]/30 hover:bg-[#ff00ff]/40"
-              );
-              return item.external ? (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={className}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={className}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-        </motion.div>
-      </header>
-
-      {/* Контент страницы */}
-      <div className="px-6 py-16 flex flex-col items-center pt-28">
-        <motion.h1
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="text-5xl font-bold text-[#d946ef] mb-12 drop-shadow-[0_0_20px_#d946ef]"
-        >
-          Правила Сервера FreeMind
-        </motion.h1>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5 }}
-          className="max-w-4xl bg-[#0b0014]/70 border border-[#d946ef]/40 rounded-2xl shadow-[0_0_40px_#d946ef30] backdrop-blur-md p-8 leading-relaxed space-y-12"
-        >
-          {/* Общие правила */}
-          <div className="space-y-4">
-            <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
-              <Image
-                src={banners[0]}
-                alt="Общие правила"
-                width={768}
-                height={192}
-                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
-              />
-            </div>
-            <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Общие правила</h2>
-            <p className="text-gray-300 whitespace-pre-line">{`1.1 Регистрируясь на проекте FreeMind вы автоматически подтверждаете свою ознакомленность с правилами, соглашаетесь со всем сводом правил и обязуетесь соблюдать их
+        <p className="whitespace-pre-line leading-relaxed">{`1.1 Регистрируясь на проекте FreeMind вы автоматически подтверждаете свою ознакомленность с правилами, соглашаетесь со всем сводом правил и обязуетесь соблюдать их
 
 1.2 Незнание правил не освобождает от ответственности
 
@@ -181,21 +76,20 @@ export default function RulesPage() {
 1.8 Средства потраченные на платные услуги являются добровольной поддержкой и не подлежат возврату.
 
 1.9 Присутствие на дискорд сервере обязательно, иначе вы не сможете зайти на сервер.`}</p>
-          </div>
-
-          {/* Правила поведения в чате */}
-          <div className="space-y-4">
-            <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
-              <Image
-                src={banners[1]}
-                alt="Правила поведения в чате"
-                width={768}
-                height={192}
-                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
-              />
-            </div>
-            <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Правила поведения в чате</h2>
-            <p className="text-gray-300 whitespace-pre-line">{`2.1 Запрещен буллинг игроков и проявление провокационной токсичности в любом виде
+      </div>
+    ),
+    "Правила поведения в чате": (
+      <div className="space-y-6 text-gray-300">
+        <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50]">
+          <Image
+            src={banners["Правила поведения в чате"]}
+            alt="Правила поведения в чате"
+            width={768}
+            height={192}
+            className="w-full h-auto object-cover opacity-90"
+          />
+        </div>
+        <p className="whitespace-pre-line leading-relaxed">{`2.1 Запрещен буллинг игроков и проявление провокационной токсичности в любом виде
 
 2.2 Запрещено оскорбление религии, национальности, расы, пола и других индивидуальных отличий человека в любом виде.
 
@@ -216,21 +110,20 @@ export default function RulesPage() {
 2.10 Запрещена реклама в любом виде
 
 2.11 Запрещено обсуждение политики.`}</p>
-          </div>
-
-          {/* Внутриигровые правила */}
-          <div className="space-y-4">
-            <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
-              <Image
-                src={banners[2]}
-                alt="Внутриигровые правила"
-                width={768}
-                height={192}
-                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
-              />
-            </div>
-            <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Внутриигровые правила</h2>
-            <p className="text-gray-300 whitespace-pre-line">{`3.1 Запрещено гриферство в любом виде
+      </div>
+    ),
+    "Внутриигровые правила": (
+      <div className="space-y-6 text-gray-300">
+        <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50]">
+          <Image
+            src={banners["Внутриигровые правила"]}
+            alt="Внутриигровые правила"
+            width={768}
+            height={192}
+            className="w-full h-auto object-cover opacity-90"
+          />
+        </div>
+        <p className="whitespace-pre-line leading-relaxed">{`3.1 Запрещено гриферство в любом виде
 
 3.2 Запрещено использование читов, скриптов, авто-кликеров, X-ray, baritone и подобных
 
@@ -255,30 +148,206 @@ export default function RulesPage() {
 3.12 18+ арты должны быть в закрытых комнатах
 
 3.13 При нарушении — обращаться в тикет или к хелперу.`}</p>
-          </div>
-
-          {/* Правила модерации */}
-          <div className="space-y-4">
-            <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50] animate-pulse-slow">
-              <Image
-                src={banners[3]}
-                alt="Правила модерации"
-                width={768}
-                height={192}
-                className="w-full h-auto max-h-[50vh] object-cover opacity-90 hover:opacity-100 transition-all duration-500"
-              />
-            </div>
-            <h2 className="text-2xl font-semibold text-[#d946ef] mt-4">Правила модерации</h2>
-            <p className="text-gray-300 whitespace-pre-line">{`4.1 Проверка: игрок обязан пройти проверку при подозрении на нарушения. Отказ = нарушение.
+      </div>
+    ),
+    "Правила модерации": (
+      <div className="space-y-6 text-gray-300">
+        <div className="relative rounded-2xl overflow-hidden border border-[#d946ef]/50 shadow-[0_0_30px_#d946ef50]">
+          <Image
+            src={banners["Правила модерации"]}
+            alt="Правила модерации"
+            width={768}
+            height={192}
+            className="w-full h-auto object-cover opacity-90"
+          />
+        </div>
+        <p className="whitespace-pre-line leading-relaxed">{`4.1 Проверка: игрок обязан пройти проверку при подозрении на нарушения. Отказ = нарушение.
 
 4.2 Модераторы могут удалять сущности, влияющие на TPS
 
 4.3 При постройках сохраняйте лайтматики
 
 4.4 Администрация имеет право в особых случаях выходить за рамки правил.`}</p>
-          </div>
-        </motion.div>
       </div>
+    ),
+  };
+
+  return (
+    <div className="relative min-h-screen bg-[#0b0014] text-white">
+      {/* Топбар */}
+      <header className="fixed top-0 left-0 w-full z-50 bg-[#0b0014]/70 backdrop-blur-md border-b border-[#d946ef]/30 shadow-[0_0_20px_#d946ef20]">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo.gif" alt="Logo" width={36} height={36} className="w-9 h-9 object-cover" />
+            <span className="text-xl font-bold text-[#d946ef]">FreeMind</span>
+          </Link>
+
+          {/* Десктоп: крупные кнопки */}
+          <nav className="hidden md:flex gap-3">
+            {navItems.map((item) => {
+              const isActive = !item.external && pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={clsx(
+                    "px-4 py-2 text-sm font-bold rounded-full transition-all duration-300",
+                    isActive
+                      ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_12px_#d946ef80] text-white"
+                      : "bg-[#d946ef]/30 hover:bg-[#d946ef]/50 text-gray-200"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Мобильный гамбургер */}
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="md:hidden text-[#d946ef] p-2"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
+      </header>
+
+      {/* Полноэкранное меню (мобильное) */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed inset-0 z-50 bg-[#0b0014] flex flex-col"
+          >
+            <div className="flex justify-between items-center p-4 border-b border-[#d946ef]/30">
+              <Link href="/" className="flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                <Image src="/logo.gif" alt="Logo" width={36} height={36} className="w-9 h-9 object-cover" />
+                <span className="text-xl font-bold text-[#d946ef]">FreeMind</span>
+              </Link>
+              <button onClick={() => setMobileMenuOpen(false)} className="text-[#d946ef] p-2">
+                <X size={24} />
+              </button>
+            </div>
+            <nav className="flex-1 p-6 space-y-4">
+              {navItems.map((item) => {
+                const isActive = !item.external && pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={clsx(
+                      "block w-full text-left px-4 py-3 rounded-lg text-lg font-medium transition-all",
+                      isActive
+                        ? "bg-[#d946ef]/50 text-white shadow-[0_0_10px_#d946ef70]"
+                        : "text-gray-300 hover:bg-[#d946ef]/20"
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Основной контент */}
+      <div className="flex pt-16 md:pt-20">
+        {/* Сайдбар — только на десктопе */}
+        <aside className="hidden md:block w-72 bg-[#10001f]/80 border-r border-[#d946ef]/40 p-6 backdrop-blur-md min-h-screen">
+          <h2 className="text-sm font-bold text-gray-400 mb-6 tracking-widest">ПРАВИЛА СЕРВЕРА</h2>
+          <ul className="space-y-3">
+            {ruleSections.map(({ name, icon: Icon }) => (
+              <li key={name}>
+                <button
+                  onClick={() => setSelected(name)}
+                  className={clsx(
+                    "flex items-center w-full gap-3 px-3 py-2 rounded-lg transition-all duration-300",
+                    selected === name
+                      ? "bg-[#d946ef]/30 border border-[#d946ef]/50 shadow-[0_0_15px_#d946ef70] text-[#d946ef] font-semibold"
+                      : "hover:bg-[#d946ef]/10 text-gray-300"
+                  )}
+                >
+                  <Icon size={18} className={selected === name ? "text-[#d946ef]" : "text-gray-400"} />
+                  <span>{name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </aside>
+
+        {/* Контент */}
+        <main className="flex-1 p-6 md:p-10 pb-20">
+          <motion.div
+            key={selected}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-4xl mx-auto"
+          >
+            <h1 className="text-3xl md:text-4xl font-bold text-[#d946ef] mb-8 text-center md:text-left">
+              {selected}
+            </h1>
+            <div className="bg-[#0b0014]/70 border border-[#d946ef]/40 rounded-2xl shadow-[0_0_40px_#d946ef30] backdrop-blur-md p-6 md:p-8 leading-relaxed">
+              {content[selected]}
+            </div>
+          </motion.div>
+        </main>
+      </div>
+
+      {/* КНОПКА ВНИЗУ СПРАВА — ТОЛЬКО НА МОБИЛЬНЫХ */}
+      <button
+        onClick={() => setBottomMenuOpen(true)}
+        className="md:hidden fixed bottom-6 right-6 bg-[#d946ef]/20 backdrop-blur-md border border-[#d946ef]/40 p-3 rounded-full shadow-[0_0_20px_#d946ef40] z-40 hover:bg-[#d946ef]/30 transition-all"
+      >
+        <Menu size={24} className="text-[#d946ef]" />
+      </button>
+
+      {/* ШТОРКА С ВКЛАДКАМИ ПРАВИЛ */}
+      <AnimatePresence>
+        {bottomMenuOpen && (
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0b0014]/95 backdrop-blur-xl border-t border-[#d946ef]/40 shadow-[0_-20px_40px_#d946ef30] rounded-t-3xl z-50 overflow-hidden"
+          >
+            <div className="p-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold text-[#d946ef]">Разделы правил</h3>
+                <button onClick={() => setBottomMenuOpen(false)} className="text-[#d946ef] p-1">
+                  <X size={20} />
+                </button>
+              </div>
+              <div className="grid grid-cols-1 gap-2">
+                {ruleSections.map(({ name, icon: Icon }) => (
+                  <button
+                    key={name}
+                    onClick={() => {
+                      setSelected(name);
+                      setBottomMenuOpen(false);
+                    }}
+                    className={clsx(
+                      "flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left",
+                      selected === name
+                        ? "bg-[#d946ef]/30 border border-[#d946ef]/50 shadow-[0_0_15px_#d946ef70] text-[#d946ef]"
+                        : "bg-[#d946ef]/10 hover:bg-[#d946ef]/20 text-gray-300"
+                    )}
+                  >
+                    <Icon size={20} />
+                    <span className="font-medium">{name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
