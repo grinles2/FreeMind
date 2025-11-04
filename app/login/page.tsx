@@ -1,4 +1,3 @@
-
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,15 +11,14 @@ import { useState } from "react";
 export default function AuthPage() {
   const pathname = usePathname();
   const [isLogin, setIsLogin] = useState(true);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Единое состояние для мобильного меню
 
   const navItems = [
     { href: "/", label: "Главная", external: false },
     { href: "/map", label: "Онлайн-карта", external: false },
     { href: "/wiki", label: "Вики", external: false },
     { href: "/rules", label: "Правила", external: false },
-    { href: "/shop", label: "Магазин", external: false },
-    { href: "/auth", label: "Вход", external: false },
+    { href: "/login", label: "Вход", external: false },
   ];
 
   return (
@@ -29,87 +27,110 @@ export default function AuthPage() {
       <div className="fixed inset-0 bg-gradient-to-br from-[#0b0014] via-[#1a0028] to-[#0b0014] opacity-90" />
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#d946ef20] via-transparent to-transparent opacity-30" />
 
-      {/* Топбар */}
+      {/* ТОПБАР — В СТИЛЕ ПРИМЕРА */}
       <header className="fixed top-0 left-0 w-full z-50 bg-[#0b0014]/70 backdrop-blur-md border-b border-[#d946ef]/30 shadow-[0_0_20px_#d946ef20]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.gif" alt="Logo" width={36} height={36} className="w-9 h-9 object-cover" />
-            <span className="text-xl font-bold text-[#d946ef]">FreeMind</span>
+            <Image
+              src="/logo.gif"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="w-10 h-10 object-cover"
+            />
+            <span className="text-2xl font-bold text-[#d946ef]">FreeMind</span>
           </Link>
 
+          {/* Мобильный гамбургер */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-gray-300 hover:text-[#d946ef] focus:outline-none"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
           {/* Десктоп: крупные кнопки */}
-          <nav className="hidden md:flex gap-3">
+          <nav className="hidden md:flex gap-4">
             {navItems.map((item) => {
               const isActive = !item.external && pathname === item.href;
-              return (
+              const className = clsx(
+                "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
+                isActive
+                  ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
+                  : "bg-[#d946ef]/30 hover:bg-[#ff00ff]/40"
+              );
+              return item.external ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                >
+                  {item.label}
+                </a>
+              ) : (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={clsx(
-                    "px-4 py-2 text-sm font-bold rounded-full transition-all duration-300",
-                    isActive
-                      ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_12px_#d946ef80] text-white"
-                      : "bg-[#d946ef]/30 hover:bg-[#d946ef]/50 text-gray-200"
-                  )}
+                  className={className}
                 >
                   {item.label}
                 </Link>
               );
             })}
           </nav>
-
-          {/* Мобильный гамбургер */}
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden text-[#d946ef] p-2"
-          >
-            <Menu size={24} />
-          </button>
         </div>
-      </header>
 
-      {/* Полноэкранное меню (мобильное) */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed inset-0 z-50 bg-[#0b0014] flex flex-col"
+        {/* МОБИЛЬНОЕ МЕНЮ — СПРАВА, В СТИЛЕ ПРИМЕРА */}
+        <motion.div
+          initial={{ x: "100%" }}
+          animate={{ x: isMenuOpen ? 0 : "100%" }}
+          transition={{ duration: 0.3 }}
+          className="fixed top-0 right-0 h-full w-64 bg-[#0b0014]/90 backdrop-blur-md border-l border-[#d946ef]/30 p-6 z-50 md:hidden"
+        >
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="text-gray-300 hover:text-[#d946ef] mb-6"
           >
-            <div className="flex justify-between items-center p-4 border-b border-[#d946ef]/30">
-              <Link href="/" className="flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <Image src="/logo.gif" alt="Logo" width={36} height={36} className="w-9 h-9 object-cover" />
-                <span className="text-xl font-bold text-[#d946ef]">FreeMind</span>
-              </Link>
-              <button onClick={() => setMobileMenuOpen(false)} className="text-[#d946ef] p-2">
-                <X size={24} />
-              </button>
-            </div>
-            <nav className="flex-1 p-6 space-y-4">
-              {navItems.map((item) => {
-                const isActive = !item.external && pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={clsx(
-                      "block w-full text-left px-4 py-3 rounded-lg text-lg font-medium transition-all",
-                      isActive
-                        ? "bg-[#d946ef]/50 text-white shadow-[0_0_10px_#d946ef70]"
-                        : "text-gray-300 hover:bg-[#d946ef]/20"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <X size={24} />
+          </button>
+          <nav className="flex flex-col gap-4">
+            {navItems.map((item) => {
+              const isActive = !item.external && pathname === item.href;
+              const className = clsx(
+                "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
+                isActive
+                  ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
+                  : "bg-[#d946ef]/30 hover:bg-[#ff00ff]/40"
+              );
+              return item.external ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={className}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </motion.div>
+      </header>
 
       {/* Основной контент */}
       <main className="relative z-10 flex items-center justify-center min-h-screen pt-16 md:pt-20 px-4">
@@ -134,7 +155,7 @@ export default function AuthPage() {
               </div>
             </div>
 
-            {/* Вкладки: Вход / Регистрация */}
+            {/* Вкладки */}
             <div className="flex mb-8 bg-[#1a0028]/50 rounded-2xl p-1">
               <button
                 onClick={() => setIsLogin(true)}
@@ -246,7 +267,7 @@ function LoginForm() {
   );
 }
 
-// === РЕГИСТРАЦИЯ: НИК + ПАРОЛЬ (БЕЗ DISCORD) ===
+// === РЕГИСТРАЦИЯ: НИК + ПАРОЛЬ ===
 function RegisterForm() {
   return (
     <motion.form

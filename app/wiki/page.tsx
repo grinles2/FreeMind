@@ -1,5 +1,6 @@
 
 "use client";
+
 import { JSX, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,6 +19,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import Image from "next/image";
 
 interface CategoryItem {
   name: string;
@@ -44,8 +46,8 @@ interface ContentMap {
 
 export default function WikiPage() {
   const [selected, setSelected] = useState<ContentKey>("Как играть?");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [bottomMenuOpen, setBottomMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [bottomMenuOpen, setBottomMenuOpen] = useState(false); // ВЕРНУЛ
   const pathname = usePathname();
 
   const navItems = [
@@ -53,7 +55,7 @@ export default function WikiPage() {
     { href: "/map", label: "Онлайн-карта", external: false },
     { href: "/wiki", label: "Вики", external: false },
     { href: "/rules", label: "Правила", external: false },
-    { href: "/shop", label: "Магазин", external: false }
+    { href: "/login", label: "Вход", external: false },
   ];
 
   const wikiSections: { name: ContentKey; icon: React.ComponentType<any> }[] = [
@@ -497,15 +499,32 @@ export default function WikiPage() {
 
   return (
     <div className="relative min-h-screen bg-[#0b0014] text-white">
-      {/* Топбар */}
+      {/* ТОПБАР — В СТИЛЕ ПРИМЕРА */}
       <header className="fixed top-0 left-0 w-full z-50 bg-[#0b0014]/70 backdrop-blur-md border-b border-[#d946ef]/30 shadow-[0_0_20px_#d946ef20]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.gif" alt="Logo" className="w-9 h-9 object-cover" />
-            <span className="text-xl font-bold text-[#d946ef]">FreeMind</span>
+            <Image
+              src="/logo.gif"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="w-10 h-10 object-cover"
+            />
+            <span className="text-2xl font-bold text-[#d946ef]">FreeMind</span>
           </Link>
 
-          <nav className="hidden md:flex gap-2">
+          {/* Мобильный гамбургер */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-[#d946ef] focus:outline-none"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+          {/* Десктоп: крупные кнопки */}
+          <nav className="hidden md:flex gap-4">
             {navItems.map((item) => {
               const isActive = !item.external && pathname === item.href;
               return (
@@ -513,10 +532,10 @@ export default function WikiPage() {
                   key={item.href}
                   href={item.href}
                   className={clsx(
-                    "px-3 py-1.5 text-xs font-semibold rounded-full transition-all",
+                    "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
                     isActive
-                      ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_8px_#d946ef70]"
-                      : "bg-[#d946ef]/30 hover:bg-[#ff00ff]/40"
+                      ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
+                      : "bg-[#d946ef]/30 hover:bg-[#d946ef]/40"
                   )}
                 >
                   {item.label}
@@ -524,63 +543,52 @@ export default function WikiPage() {
               );
             })}
           </nav>
-
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden text-[#d946ef] p-2"
-          >
-            <Menu size={24} />
-          </button>
         </div>
-      </header>
 
-      {/* Полноэкранное главное меню */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed inset-0 z-50 bg-[#0b0014] flex flex-col"
-          >
-            <div className="flex justify-between items-center p-4 border-b border-[#d946ef]/30">
-              <Link href="/" className="flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <img src="/logo.gif" alt="Logo" className="w-9 h-9 object-cover" />
-                <span className="text-xl font-bold text-[#d946ef]">FreeMind</span>
-              </Link>
-              <button onClick={() => setMobileMenuOpen(false)} className="text-[#d946ef] p-2">
+        {/* МОБИЛЬНОЕ МЕНЮ — СПРАВА */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.3 }}
+              className="fixed top-0 right-0 h-full w-64 bg-[#0b0014]/90 backdrop-blur-md border-l border-[#d946ef]/30 p-6 z-50 md:hidden"
+            >
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="text-[#d946ef] mb-6"
+              >
                 <X size={24} />
               </button>
-            </div>
+              <nav className="flex flex-col gap-4">
+                {navItems.map((item) => {
+                  const isActive = !item.external && pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={clsx(
+                        "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300",
+                        isActive
+                          ? "bg-[#d946ef]/50 border border-[#d946ef] shadow-[0_0_10px_#d946ef70]"
+                          : "bg-[#d946ef]/30 hover:bg-[#d946ef]/40"
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
 
-            <nav className="flex-1 p-6 space-y-4">
-              {navItems.map((item) => {
-                const isActive = !item.external && pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={clsx(
-                      "block w-full text-left px-4 py-3 rounded-lg text-lg font-medium transition-all",
-                      isActive
-                        ? "bg-[#d946ef]/50 text-white shadow-[0_0_10px_#d946ef70]"
-                        : "text-gray-300 hover:bg-[#d946ef]/20"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Основной контент */}
-      <div className="flex pt-16 md:pt-20">
-        {/* Сайдбар — только на десктопе */}
+      {/* ОСНОВНОЙ КОНТЕНТ */}
+      <div className="flex pt-20">
+        {/* САЙДБАР ВИКИ — НЕ ТРОГАЛ */}
         <aside className="hidden md:block w-72 bg-[#10001f]/80 border-r border-[#d946ef]/40 p-6 backdrop-blur-md min-h-screen">
           {categories.map((group, idx) => (
             <div key={idx} className="mb-8">
@@ -610,7 +618,7 @@ export default function WikiPage() {
           ))}
         </aside>
 
-        {/* Контент */}
+        {/* КОНТЕНТ */}
         <main className="flex-1 p-6 md:p-10 pb-20">
           <motion.div
             key={selected}
@@ -631,7 +639,7 @@ export default function WikiPage() {
         </main>
       </div>
 
-      {/* КНОПКА ВНИЗУ СПРАВА — ТОЛЬКО НА МОБИЛЬНЫХ */}
+      {/* КНОПКА ВНИЗУ СПРАВА — ВЕРНУЛ КАК БЫЛО */}
       <button
         onClick={() => setBottomMenuOpen(true)}
         className="md:hidden fixed bottom-6 right-6 bg-[#d946ef]/20 backdrop-blur-md border border-[#d946ef]/40 p-3 rounded-full shadow-[0_0_20px_#d946ef40] z-40 hover:bg-[#d946ef]/30 transition-all"
@@ -639,7 +647,7 @@ export default function WikiPage() {
         <Menu size={24} className="text-[#d946ef]" />
       </button>
 
-      {/* ШТОРКА С ВИКИ-РАЗДЕЛАМИ */}
+      {/* ШТОРКА С ВКЛАДКАМИ ВИКИ — ВЕРНУЛ */}
       <AnimatePresence>
         {bottomMenuOpen && (
           <motion.div
@@ -652,14 +660,10 @@ export default function WikiPage() {
             <div className="p-4">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold text-[#d946ef]">Разделы Вики</h3>
-                <button
-                  onClick={() => setBottomMenuOpen(false)}
-                  className="text-[#d946ef] p-1"
-                >
+                <button onClick={() => setBottomMenuOpen(false)} className="text-[#d946ef] p-1">
                   <X size={20} />
                 </button>
               </div>
-
               <div className="grid grid-cols-1 gap-2">
                 {wikiSections.map(({ name, icon: Icon }) => (
                   <button
