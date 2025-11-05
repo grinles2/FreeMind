@@ -37,14 +37,12 @@ export default function AuthPage() {
             <span className="text-2xl font-bold text-[#d946ef]">FreeMind</span>
           </Link>
 
-          {/* Мобильный гамбургер */}
           <div className="md:hidden">
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-gray-300 hover:text-[#d946ef]">
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
 
-          {/* Десктоп */}
           <nav className="hidden md:flex gap-4">
             {navItems.map((item) => {
               const isActive = !item.external && pathname === item.href;
@@ -148,11 +146,7 @@ export default function AuthPage() {
 
             {/* Формы */}
             <AnimatePresence mode="wait">
-              {isLogin ? (
-                <LoginForm key="login" onSuccess={() => router.push("/menu")} />
-              ) : (
-                <RegisterForm key="register" />
-              )}
+              {isLogin ? <LoginForm key="login" /> : <RegisterForm key="register" />}
             </AnimatePresence>
 
             {/* Ссылки */}
@@ -184,8 +178,9 @@ export default function AuthPage() {
   );
 }
 
-// === ВХОД: POST /api/login → JWT в cookie → /menu ===
-function LoginForm({ onSuccess }: { onSuccess: () => void }) {
+// === ВХОД: POST /api/login → { success, redirectTo } → редирект ===
+function LoginForm() {
+  const router = useRouter();
   const [mcUser, setMcUser] = useState("");
   const [password, setPassword] = useState("");
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -201,19 +196,23 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mcUser: mcUser.trim(), password }),
+        credentials: "include", // HttpOnly cookie
       });
 
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || "Неверный ник или пароль");
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || data.message || "Ошибка входа");
       }
 
-      // JWT в cookie
-      document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Strict`;
+      const redirectTo = typeof data.redirectTo === "string" && data.redirectTo.startsWith("/") ? data.redirectTo : "/menu";
 
-      setNotification({ type: "success", message: "Вход успешен!" });
-      setTimeout(() => onSuccess(), 800);
+      setNotification({ type: "success", message: "Вход выполнен успешно!" });
+
+      setTimeout(() => {
+        router.push(redirectTo);
+        router.refresh(); // Обновляем серверные данные
+      }, 800);
     } catch (err: any) {
       setNotification({ type: "error", message: err.message });
     } finally {
@@ -292,8 +291,9 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
   );
 }
 
-// === РЕГИСТРАЦИЯ: Полная валидация + серверные ошибки ===
+// === РЕГИСТРАЦИЯ: POST /api/users → { success, redirectTo } → редирект ===
 function RegisterForm() {
+  const router = useRouter();
   const [mcUser, setMcUser] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -305,12 +305,10 @@ function RegisterForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Сброс ошибок
     setMcUserError("");
     setPasswordError("");
     setNotification(null);
 
-    // Фронтенд-валидация
     let hasError = false;
 
     if (!mcUser.trim()) {
@@ -343,31 +341,32 @@ function RegisterForm() {
           verified: "false",
           active: "true",
         }),
+        credentials: "include", // HttpOnly cookie
       });
 
       const data = await res.json();
 
-      if (!res.ok) {
-        // Серверные ошибки
+      if (!res.ok || !data.success) {
         if (data.error?.includes("уже занято")) {
           setMcUserError(data.error);
         } else if (data.error?.includes("8 символов")) {
           setPasswordError(data.error);
         } else {
-          throw new Error(data.error || "Ошибка регистрации");
+          throw new Error(data.error || data.message || "Ошибка регистрации");
         }
         return;
       }
 
-      // Успех
-      if (data.success) {
-        setNotification({ type: "success", message: "Регистрация успешна!" });
-        setMcUser("");
-        setPassword("");
-        setRepeatPassword("");
-      }
+      const redirectTo = typeof data.redirectTo === "string" && data.redirectTo.startsWith("/") ? data.redirectTo : "/menu";
+
+      setNotification({ type: "success", message: "Регистрация успешна!" });
+
+      setTimeout(() => {
+        router.push(redirectTo);
+        router.refresh();
+      }, 800);
     } catch (err: any) {
-      setNotification({ type: "error", message: err.message || "Что-то пошло не так" });
+      setNotification({ type: "error", message: err.message });
     } finally {
       setIsLoading(false);
     }
@@ -381,7 +380,6 @@ function RegisterForm() {
       className="space-y-5"
       onSubmit={handleSubmit}
     >
-      {/* НИК */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">Ник в Minecraft</label>
         <div className="relative">
@@ -409,7 +407,6 @@ function RegisterForm() {
         )}
       </div>
 
-      {/* ПАРОЛЬ */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">Пароль</label>
         <div className="relative">
@@ -431,7 +428,6 @@ function RegisterForm() {
         </div>
       </div>
 
-      {/* ПОВТОР ПАРОЛЯ */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">Повторите пароль</label>
         <div className="relative">
@@ -456,7 +452,6 @@ function RegisterForm() {
         )}
       </div>
 
-      {/* КНОПКА */}
       <button
         type="submit"
         disabled={isLoading}
@@ -468,7 +463,6 @@ function RegisterForm() {
         {isLoading ? <>Создание...</> : <>Создать аккаунт</>}
       </button>
 
-      {/* УВЕДОМЛЕНИЕ */}
       <AnimatePresence>
         {notification && (
           <motion.div
