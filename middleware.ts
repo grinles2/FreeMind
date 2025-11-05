@@ -1,33 +1,51 @@
+// middleware.ts
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 
-export async function middleware(req) {
-  console.log("🛡️ [MIDDLEWARE] Проверка авторизации...");
+const SECRET = process.env.JWT_SECRET || "default_secret";
 
+export async function middleware(req: NextRequest) {
+  const url = req.nextUrl.clone();
   const token = req.cookies.get("token")?.value;
 
   if (!token) {
-    console.log("❌ Токен отсутствует");
-    if (req.nextUrl.pathname.startsWith("/menu")) {
-      return NextResponse.redirect(new URL("/login", req.url));
+    // Если токена нет, редирект на login
+    if (req.nextUrl.pathname.startsWith("/menu") || req.nextUrl.pathname.startsWith("/admin_menu")) {
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
     }
     return NextResponse.next();
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("✅ Токен валиден:", decoded);
+    const decoded: any = jwt.verify(token, SECRET);
+    req.nextUrl.searchParams.set("user", JSON.stringify({ mcUser: decoded.mcUser, role: decoded.role }));
+
+    // Пример проверки ролей
+    const isAdminPage = req.nextUrl.pathname.startsWith("/admin_menu");
+    const isUserPage = req.nextUrl.pathname.startsWith("/menu");
+
+    if (isAdminPage && !decoded.role.includes("Admin") && !decoded.role.includes("Helper")) {
+      url.pathname = "/menu"; // обычный игрок не в админку
+      return NextResponse.redirect(url);
+    }
+
+    if (isUserPage && decoded.role.includes("Admin")) {
+      url.pathname = "/admin_menu"; // админ не в обычную меню
+      return NextResponse.redirect(url);
+    }
+
     return NextResponse.next();
-  } catch (err) {
-    console.log("⚠️ Ошибка токена:", err.message);
-    if (req.nextUrl.pathname.startsWith("/menu")) {
-      return NextResponse.redirect(new URL("/login", req.url));
+  } catch (err: any) {
+    if (req.nextUrl.pathname.startsWith("/menu") || req.nextUrl.pathname.startsWith("/admin_menu")) {
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
     }
     return NextResponse.next();
   }
 }
 
-// 🔒 Обрабатываем только эти пути
 export const config = {
-  matcher: ["/menu/:path*"],
+  matcher: ["/menu/:path*", "/admin_menu/:path*"],
 };
